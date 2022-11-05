@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Basemaps with different projections | Sample | ArcGIS API for JavaScript
+      4.24
+    </title>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.24/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.24/"></script>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+      #srDiv{
+        height: 60px;
+        padding: 10px;
+      }
+    </style>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/portal/Portal",
+        "esri/widgets/BasemapGallery",
+        "esri/widgets/BasemapGallery/support/PortalBasemapsSource",
+        "esri/widgets/Expand",
+        "esri/layers/CSVLayer"
+      ], function (
+        Map,
+        MapView,
+        Portal,
+        BasemapGallery,
+        PortalBasemapsSource,
+        Expand,
+        CSVLayer
+      ) {
+        const portal = new Portal();
+
+        // source for basemaps from a portal group
+        // containing basemaps with different projections
+        const source = new PortalBasemapsSource({
+          portal,
+          query: {
+            id: "bdb9d65e0b5c480c8dcc6916e7f4e099"
+          }
+        });
+
+        const map = new Map({
+          basemap: {
+            portalItem: {
+              id: "8d91bd39e873417ea21673e0fee87604" // nova basemap
+            }
+          }
+        });
+
+const url =
+          "https://firms.modaps.eosdis.nasa.gov/api/country/csv/9153b8010f5fd0eb109eaa939a4222b4/VIIRS_NOAA20_NRT/IND/1/2022-11-05";
+          
+const csvLayer = new CSVLayer({
+          url: url,
+        });
+        
+        csvLayer.renderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          symbol: {
+
+    type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+    size: 2,
+    color: "yellow",
+ outline: {  // autocasts as new SimpleLineSymbol()
+      width: 0.5,
+      color: "yellow"
+    }
+          }
+        };
+
+
+map.add(csvLayer);
+
+      
+        // center the view over 48 states
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [80, 25],
+          zoom: 3,
+          constraints: {
+            snapToZoom: false
+          }
+        });
+        view.ui.add("srDiv", "top-right");
+
+        const bgExpand = new Expand({
+          view,
+          content: new BasemapGallery({ source, view }),
+          expandIconClass: "esri-icon-basemap"
+        });
+        view.ui.add(bgExpand, "top-right");
+
+        view.watch("spatialReference", () => {
+          document.getElementById(
+            "srDiv"
+          ).innerHTML = `Yellow = <b>Active Fire</b> <br>
+                         Green  = <b>Air Quality Index</b>`;
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="srDiv" class="esri-widget"></div>
+  </body>
+</html>
