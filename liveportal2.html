@@ -7,7 +7,8 @@
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
     <title>
-      Live Active Fire Monitoring for India 
+      Basemaps with different projections | Sample | ArcGIS API for JavaScript
+      4.24
     </title>
 
     <link
@@ -99,7 +100,7 @@ let csvLayer = new CSVLayer({
     size: 1,
     color: "yellow",
  outline: {  // autocasts as new SimpleLineSymbol()
-      width: 0.5,
+      width: 1,
       color: "yellow"
     }
           }
@@ -112,8 +113,8 @@ map.add(csvLayer);
         const view = new MapView({
           container: "viewDiv",
           map: map,
-          center: [80, 25],
-          zoom: 3,
+          center: [77, 30],
+          zoom: 6,
           constraints: {
             snapToZoom: false
           }
@@ -168,7 +169,7 @@ map.add(csvLayer);
     size: 1,
     color: "yellow",
  outline: {  // autocasts as new SimpleLineSymbol()
-      width: 0.5,
+      width: 1,
       color: "yellow"
     }
           }
